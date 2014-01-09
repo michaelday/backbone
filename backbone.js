@@ -244,7 +244,19 @@
   // Create a new model with the specified attributes. A client id (`cid`)
   // is automatically generated and assigned for you.
   var Model = Backbone.Model = function(attributes, options) {
-    var attrs = attributes || {};
+  	/* SproutSocial code does not like to always clone attributes. Due to this
+  	   our codebase assumes that Backbone will not pass by reference, so we must 
+  	   always clone deeply all attributes to remove any possibility of sharing the defaults.
+  	*/
+	/*var sniffForReference = function(k,v) {
+		if(_.isObject(v) || _.isArray(v)) {
+			console.warn('Passing attributes by reference is Deprecated. ['+k+"="+JSON.stringify(v)+']');
+		}
+	};
+  	_.each(attributes, function(attr,k){
+		sniffForReference(k,attr);
+  	});*/
+    var attrs = $.extend(true,{}, attributes) || {};
     options || (options = {});
     this.cid = _.uniqueId('c');
     this.attributes = {};
